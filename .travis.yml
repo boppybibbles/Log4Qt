@@ -43,25 +43,25 @@ before_script:
 script:
   - case "$BUILDSYSTEM" in
       qmake)
-          qmake
-          make
-          make check
+          qmake;
+          make;
+          make check;
           ;;
       cmake)
-          cmake -GNinja -H. -Bbuild
-          cmake --build build
-          cmake --build build --target test
+          cmake -GNinja -H. -Bbuild;
+          cmake --build build;
+          cmake --build build --target test;
           ;;
       qbs)
-          echo TODO
-          qbs --version
-          qbs setup-toolchains --detect
-          qbs setup-qt --detect
-          qbs config defaultProfile $QT_VERSION
-          qbs build -d build -f loq4qt.qbs
+          echo TODO;
+          qbs --version;
+          qbs setup-toolchains --detect;
+          qbs setup-qt --detect;
+          qbs config defaultProfile $QT_VERSION;
+          qbs build -d build -f loq4qt.qbs;
           ;;
       *)
-          echo "No build system is set" >&2
-          false
+          echo "No build system is set" >&2;
+          false;
           ;;
     esac
