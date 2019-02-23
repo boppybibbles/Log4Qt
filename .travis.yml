@@ -67,7 +67,7 @@ script:
           qbs setup-toolchains --detect;
           qbs setup-qt --detect;
           qbs config defaultProfile $QT_VERSION;
-          ls -ls
+          ls -ls;
           qbs build -d build -f loq4qt.qbs;
           ;;
       *)
