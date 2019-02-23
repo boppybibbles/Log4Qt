@@ -68,7 +68,7 @@ script:
           qbs setup-qt --detect;
           qbs config defaultProfile $QT_VERSION;
           ls -ls;
-          qbs build -f loq4qt.qbs;
+          qbs build -f log4qt.qbs;
           ;;
       *)
           echo "No build system is set" >&2;
