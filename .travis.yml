@@ -18,6 +18,12 @@ env:
 - QT_VERSION=qt511 QT_PPA=qt-5.11.3
 - QT_VERSION=qt512 QT_PPA=qt-5.12.0
 
+matrix:
+  include:
+    env:
+    - BUILDSYSTEM=make
+    - BUILDSYSTEM=cmake
+
 before_install:
   - sudo add-apt-repository --yes ppa:beineri/opt-$QT_PPA-xenial
   - sudo apt-get update -qq
@@ -29,7 +35,6 @@ before_script:
   - . /opt/$QT_VERSION/bin/$QT_VERSION-env.sh
 
 script:
-  - qmake
-  - make
-  - make check
-
+  - test "$BUILDSYSTEM" = "make" && qmake && make &&  make check
+  - test "$BUILDSYSTEM" = "cmake" && cmake -GNinja -H. -Bbuild && cmake --build build && cmake --build build --target test
+  
