@@ -35,6 +35,14 @@ before_script:
   - . /opt/$QT_VERSION/bin/$QT_VERSION-env.sh
 
 script:
-  - test "$BUILDSYSTEM" = "qmake" && (qmake && make && make check)
-  - test "$BUILDSYSTEM" = "cmake" && (cmake -H. -Bbuild && cmake --build build && cmake --build build --target test)
-  
+  - case "$BUILDSYSTEM" in
+      qmake)
+          qmake && make && make check ;;
+      cmake)
+          cmake -H. -Bbuild && cmake --build build && cmake --build build --target test ;;
+      qbs)
+          echo TODO ;;
+      *)
+          echo "No build system is set" >&2
+          false
+    esac
