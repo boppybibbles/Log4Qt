@@ -13,23 +13,29 @@ os:
 env:
 - BUILDSYSTEM=qmake QT_VERSION=qt57  QT_PPA=qt571
 - BUILDSYSTEM=cmake QT_VERSION=qt57  QT_PPA=qt571
+- BUILDSYSTEM=qbs   QT_VERSION=qt57  QT_PPA=qt571
 - BUILDSYSTEM=qmake QT_VERSION=qt58  QT_PPA=qt58
 - BUILDSYSTEM=cmake QT_VERSION=qt58  QT_PPA=qt58
+- BUILDSYSTEM=qbs   QT_VERSION=qt58  QT_PPA=qt58
 - BUILDSYSTEM=qmake QT_VERSION=qt59  QT_PPA=qt594
 - BUILDSYSTEM=cmake QT_VERSION=qt59  QT_PPA=qt594
+- BUILDSYSTEM=qbs   QT_VERSION=qt59  QT_PPA=qt594
 - BUILDSYSTEM=qmake QT_VERSION=qt510 QT_PPA=qt-5.10.1
 - BUILDSYSTEM=cmake QT_VERSION=qt510 QT_PPA=qt-5.10.1
+- BUILDSYSTEM=qbs   QT_VERSION=qt510 QT_PPA=qt-5.10.1
 - BUILDSYSTEM=qmake QT_VERSION=qt511 QT_PPA=qt-5.11.3
 - BUILDSYSTEM=cmake QT_VERSION=qt511 QT_PPA=qt-5.11.3
+- BUILDSYSTEM=qbs   QT_VERSION=qt511 QT_PPA=qt-5.11.3
 - BUILDSYSTEM=qmake QT_VERSION=qt512 QT_PPA=qt-5.12.0
 - BUILDSYSTEM=cmake QT_VERSION=qt512 QT_PPA=qt-5.12.0
+- BUILDSYSTEM=qbs   QT_VERSION=qt512 QT_PPA=qt-5.12.0
 
 before_install:
   - sudo add-apt-repository --yes ppa:beineri/opt-$QT_PPA-xenial
   - sudo apt-get update -qq
 
 install:
-  - sudo apt-get -y install $QT_VERSION-meta-minimal ninja-build
+  - sudo apt-get -y install $QT_VERSION-meta-minimal ninja-build cmake
 
 before_script:
   - . /opt/$QT_VERSION/bin/$QT_VERSION-env.sh
@@ -37,13 +43,22 @@ before_script:
 script:
   - case "$BUILDSYSTEM" in
       qmake)
-          qmake && make && make check
+          qmake
+          make
+          make check
           ;;
       cmake)
-          cmake -GNinja -H. -Bbuild && cmake --build build && cmake --build build --target test
+          cmake -GNinja -H. -Bbuild
+          cmake --build build
+          cmake --build build --target test
           ;;
       qbs)
           echo TODO
+          qbs --version
+          qbs setup-toolchains --detect
+          qbs setup-qt --detect
+          qbs config defaultProfile $QT_VERSION
+          qbs build -d build -f loq4qt.qbs
           ;;
       *)
           echo "No build system is set" >&2
