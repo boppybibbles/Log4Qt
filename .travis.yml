@@ -38,8 +38,8 @@ before_install:
   - sudo apt-get update -qq
 
 install:
-  - sudo apt-get -y install $QT_VERSION-meta-minimal \
-    ${QT_VERSION}script ${QT_VERSION}tools ${QT_VERSION}base ${QT_VERSION}svg ${QT_VERSION}imageformats libgl1-mesa-dev \
+  - sudo apt-get -y install $QT_VERSION-meta-minimal
+    ${QT_VERSION}script ${QT_VERSION}tools ${QT_VERSION}base ${QT_VERSION}svg ${QT_VERSION}imageformats libgl1-mesa-dev
     ninja-build cmake
 
 before_script:
