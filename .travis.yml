@@ -68,6 +68,7 @@ script:
           qbs setup-qt --detect;
           qbs config defaultProfile $QBS_PROFILE;
           qbs build -f log4qt.qbs;
+          qbs run -p log4qttest;
           ;;
       *)
           echo "No build system is set" >&2;
