@@ -11,18 +11,18 @@ os:
 - linux
 
 env:
-- QT_VERSION=qt57 QT_PPA=qt571
-- QT_VERSION=qt58 QT_PPA=qt58
-- QT_VERSION=qt59 QT_PPA=qt594
-- QT_VERSION=qt510 QT_PPA=qt-5.10.1
-- QT_VERSION=qt511 QT_PPA=qt-5.11.3
-- QT_VERSION=qt512 QT_PPA=qt-5.12.0
-
-matrix:
-  include:
-    env:
-    - BUILDSYSTEM=make
-    - BUILDSYSTEM=cmake
+- BUILDSYSTEM=make  QT_VERSION=qt57  QT_PPA=qt571
+- BUILDSYSTEM=cmake QT_VERSION=qt57  QT_PPA=qt571
+- BUILDSYSTEM=make  QT_VERSION=qt58  QT_PPA=qt58
+- BUILDSYSTEM=cmake QT_VERSION=qt58  QT_PPA=qt58
+- BUILDSYSTEM=make  QT_VERSION=qt59  QT_PPA=qt594
+- BUILDSYSTEM=cmake QT_VERSION=qt59  QT_PPA=qt594
+- BUILDSYSTEM=make  QT_VERSION=qt510 QT_PPA=qt-5.10.1
+- BUILDSYSTEM=cmake QT_VERSION=qt510 QT_PPA=qt-5.10.1
+- BUILDSYSTEM=make  QT_VERSION=qt511 QT_PPA=qt-5.11.3
+- BUILDSYSTEM=cmake QT_VERSION=qt511 QT_PPA=qt-5.11.3
+- BUILDSYSTEM=make  QT_VERSION=qt512 QT_PPA=qt-5.12.0
+- BUILDSYSTEM=cmake QT_VERSION=qt512 QT_PPA=qt-5.12.0
 
 before_install:
   - sudo add-apt-repository --yes ppa:beineri/opt-$QT_PPA-xenial
