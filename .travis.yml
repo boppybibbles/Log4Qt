@@ -10,6 +10,12 @@ compiler:
 os:
 - linux
 
+addons:
+  apt:
+    packages:
+    - libgl1-mesa-dev
+    - ninja-build
+
 env:
 - BUILDSYSTEM=qmake QT_VERSION=qt57  QT_PPA=qt571
 - BUILDSYSTEM=cmake QT_VERSION=qt57  QT_PPA=qt571
@@ -35,9 +41,12 @@ before_install:
   - sudo apt-get update -qq
 
 install:
-  - sudo apt-get -y install $QT_VERSION-meta-minimal
-    ${QT_VERSION}script ${QT_VERSION}tools ${QT_VERSION}base ${QT_VERSION}svg ${QT_VERSION}imageformats libgl1-mesa-dev
-    ninja-build cmake
+  - sudo apt-get -y install
+    $QT_VERSION-meta-minimal
+    ${QT_VERSION}base
+    ${QT_VERSION}script 
+    ${QT_VERSION}tools
+    ${QT_VERSION}svg
 
 before_script:
   - . /opt/$QT_VERSION/bin/$QT_VERSION-env.sh
