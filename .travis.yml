@@ -45,11 +45,7 @@ install:
           ;;
       qbs)
           sudo apt-get -y install
-            libgl1-mesa-dev
-            ${QT_VERSION}base
-            ${QT_VERSION}script 
-            ${QT_VERSION}tools
-            ${QT_VERSION}svg;
+            qbs;
           ;;
       *)
           echo "No build system is set" >&2;
@@ -66,15 +62,6 @@ before_script:
       cmake)
           ;;
       qbs)
-        git clone --depth 1 -b v1.11.1 git://code.qt.io/qbs/qbs.git qbs-build;
-        pushd qbs-build;
-        qmake -r qbs.pro QMAKE_CXX=$CXX QMAKE_LINK=$CXX "CONFIG+=qbs_no_dev_install qbs_no_man_install";
-        MAKEFLAGS=-j4 make;
-        export PATH=$PATH:$PWD/bin;
-        popd;
-        qbs setup-toolchains --detect;
-        qbs setup-qt --detect;
-        qbs config defaultProfile $QBS_PROFILE;
         ;;
       *)
         echo "No build system is set" >&2;
