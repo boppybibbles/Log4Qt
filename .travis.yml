@@ -63,6 +63,7 @@ before_script:
       qbs)
         qbs setup-toolchains --detect;
         qbs setup-qt --detect;
+        . /opt/$QT_VERSION/bin/$QT_VERSION-env.sh;
         qbs config defaultProfile $QBS_PROFILE;
           ;;
       *)
