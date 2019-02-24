@@ -55,7 +55,6 @@ install:
     
 
 before_script:
-  - . /opt/$QT_VERSION/bin/$QT_VERSION-env.sh
   - case "$BUILDSYSTEM" in
       qmake)
           ;;
@@ -71,6 +70,7 @@ before_script:
         false;
         ;;
     esac
+  - . /opt/$QT_VERSION/bin/$QT_VERSION-env.sh
 
 script:
   - case "$BUILDSYSTEM" in
