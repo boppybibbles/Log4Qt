@@ -62,7 +62,8 @@ before_script:
       cmake)
           ;;
       qbs)
-        ;;
+        qbs config defaultProfile $QBS_PROFILE;
+          ;;
       *)
         echo "No build system is set" >&2;
         false;
