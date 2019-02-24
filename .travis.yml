@@ -44,6 +44,8 @@ install:
           ninja-build;
         ;;
       qbs)
+        sudo apt-get -y install
+          ${QT_VERSION}script;
         ;;
       *)
         echo "No build system is set" >&2;
