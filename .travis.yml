@@ -62,6 +62,8 @@ before_script:
       cmake)
           ;;
       qbs)
+        qbs setup-toolchains --detect;
+        qbs setup-qt --detect;
         qbs config defaultProfile $QBS_PROFILE;
           ;;
       *)
