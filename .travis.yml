@@ -38,28 +38,27 @@ install:
   - sudo apt-get -y install $QT_VERSION-meta-minimal
   - case "$BUILDSYSTEM" in
       qmake)
-          ;;
+        ;;
       cmake)
-          sudo apt-get -y install
-            ninja-build;
-          ;;
+        sudo apt-get -y install
+          ninja-build;
+        ;;
       qbs)
-          sudo apt-get -y install
-            qbs;
-          ;;
+        ;;
       *)
-          echo "No build system is set" >&2;
-          false;
-          ;;
+        echo "No build system is set" >&2;
+        false;
+        ;;
     esac
     
 
 before_script:
+  - . /opt/$QT_VERSION/bin/$QT_VERSION-env.sh
   - case "$BUILDSYSTEM" in
       qmake)
-          ;;
+        ;;
       cmake)
-          ;;
+        ;;
       qbs)
         git clone --depth 1 -b v1.11.1 git://code.qt.io/qbs/qbs.git qbs-build;
         pushd qbs-build;
@@ -70,32 +69,31 @@ before_script:
         qbs setup-toolchains --detect;
         qbs setup-qt --detect;
         qbs config defaultProfile $QBS_PROFILE;
-          ;;
+        ;;
       *)
         echo "No build system is set" >&2;
         false;
         ;;
     esac
-  - . /opt/$QT_VERSION/bin/$QT_VERSION-env.sh
 
 script:
   - case "$BUILDSYSTEM" in
       qmake)
-          qmake;
-          MAKEFLAGS=-j4 make;
-          make check;
-          ;;
+        qmake;
+        MAKEFLAGS=-j4 make;
+        make check;
+        ;;
       cmake)
-          cmake -GNinja -H. -Bbuild;
-          cmake --build build --target all;
-          CTEST_OUTPUT_ON_FAILURE=1 cmake --build build --target test;
-          ;;
+        cmake -GNinja -H. -Bbuild;
+        cmake --build build --target all;
+        CTEST_OUTPUT_ON_FAILURE=1 cmake --build build --target test;
+        ;;
       qbs)
-          qbs build -f log4qt.qbs;
-          qbs run -p log4qttest;
-          ;;
+        qbs build -f log4qt.qbs;
+        qbs run -p log4qttest;
+        ;;
       *)
-          echo "No build system is set" >&2;
-          false;
-          ;;
+        echo "No build system is set" >&2;
+        false;
+        ;;
     esac
