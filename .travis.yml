@@ -10,12 +10,6 @@ compiler:
 os:
 - linux
 
-addons:
-  apt:
-    packages:
-    - libgl1-mesa-dev
-    - ninja-build
-
 env:
 - BUILDSYSTEM=qmake QT_VERSION=qt57  QT_PPA=qt571
 - BUILDSYSTEM=cmake QT_VERSION=qt57  QT_PPA=qt571
@@ -41,16 +35,36 @@ before_install:
   - sudo apt-get update -qq
 
 install:
-  - sudo apt-get -y install
-    $QT_VERSION-meta-minimal
-    ${QT_VERSION}base
-    ${QT_VERSION}script 
-    ${QT_VERSION}tools
-    ${QT_VERSION}svg
+  - sudo apt-get -y install $QT_VERSION-meta-minimal
+  - case "$BUILDSYSTEM" in
+      qmake)
+          ;;
+      cmake)
+          sudo apt-get -y install
+            ninja-build;
+          ;;
+      qbs)
+          sudo apt-get -y install
+            libgl1-mesa-dev
+            ${QT_VERSION}base
+            ${QT_VERSION}script 
+            ${QT_VERSION}tools
+            ${QT_VERSION}svg;
+          ;;
+      *)
+          echo "No build system is set" >&2;
+          false;
+          ;;
+    esac
+    
 
 before_script:
   - . /opt/$QT_VERSION/bin/$QT_VERSION-env.sh
   - case "$BUILDSYSTEM" in
+      qmake)
+          ;;
+      cmake)
+          ;;
       qbs)
         git clone --depth 1 -b v1.11.1 git://code.qt.io/qbs/qbs.git qbs-build;
         pushd qbs-build;
@@ -61,6 +75,10 @@ before_script:
         qbs setup-toolchains --detect;
         qbs setup-qt --detect;
         qbs config defaultProfile $QBS_PROFILE;
+        ;;
+      *)
+        echo "No build system is set" >&2;
+        false;
         ;;
     esac
 
