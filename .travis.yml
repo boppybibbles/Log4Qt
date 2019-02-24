@@ -11,27 +11,24 @@ os:
 - linux
 
 env:
-  global:
-  - MAKEFLAGS=-j4
-  matrix:
-  - BUILDSYSTEM=qmake QT_VERSION=qt57  QT_PPA=qt571
-  - BUILDSYSTEM=cmake QT_VERSION=qt57  QT_PPA=qt571
-  - BUILDSYSTEM=qbs   QT_VERSION=qt57  QT_PPA=qt571     QBS_PROFILE=qt-5-7-1
-  - BUILDSYSTEM=qmake QT_VERSION=qt58  QT_PPA=qt58
-  - BUILDSYSTEM=cmake QT_VERSION=qt58  QT_PPA=qt58
-  - BUILDSYSTEM=qbs   QT_VERSION=qt58  QT_PPA=qt58      QBS_PROFILE=qt-5-8-0
-  - BUILDSYSTEM=qmake QT_VERSION=qt59  QT_PPA=qt594
-  - BUILDSYSTEM=cmake QT_VERSION=qt59  QT_PPA=qt594
-  - BUILDSYSTEM=qbs   QT_VERSION=qt59  QT_PPA=qt594     QBS_PROFILE=qt-5-9-4
-  - BUILDSYSTEM=qmake QT_VERSION=qt510 QT_PPA=qt-5.10.1
-  - BUILDSYSTEM=cmake QT_VERSION=qt510 QT_PPA=qt-5.10.1
-  - BUILDSYSTEM=qbs   QT_VERSION=qt510 QT_PPA=qt-5.10.1 QBS_PROFILE=qt-5-10-1
-  - BUILDSYSTEM=qmake QT_VERSION=qt511 QT_PPA=qt-5.11.3
-  - BUILDSYSTEM=cmake QT_VERSION=qt511 QT_PPA=qt-5.11.3
-  - BUILDSYSTEM=qbs   QT_VERSION=qt511 QT_PPA=qt-5.11.3 QBS_PROFILE=qt-5-11-3
-  - BUILDSYSTEM=qmake QT_VERSION=qt512 QT_PPA=qt-5.12.0
-  - BUILDSYSTEM=cmake QT_VERSION=qt512 QT_PPA=qt-5.12.0
-  - BUILDSYSTEM=qbs   QT_VERSION=qt512 QT_PPA=qt-5.12.0 QBS_PROFILE=qt-5-12-0
+- BUILDSYSTEM=qmake QT_VERSION=qt57  QT_PPA=qt571
+- BUILDSYSTEM=cmake QT_VERSION=qt57  QT_PPA=qt571
+- BUILDSYSTEM=qbs   QT_VERSION=qt57  QT_PPA=qt571     QBS_PROFILE=qt-5-7-1
+- BUILDSYSTEM=qmake QT_VERSION=qt58  QT_PPA=qt58
+- BUILDSYSTEM=cmake QT_VERSION=qt58  QT_PPA=qt58
+- BUILDSYSTEM=qbs   QT_VERSION=qt58  QT_PPA=qt58      QBS_PROFILE=qt-5-8-0
+- BUILDSYSTEM=qmake QT_VERSION=qt59  QT_PPA=qt594
+- BUILDSYSTEM=cmake QT_VERSION=qt59  QT_PPA=qt594
+- BUILDSYSTEM=qbs   QT_VERSION=qt59  QT_PPA=qt594     QBS_PROFILE=qt-5-9-4
+- BUILDSYSTEM=qmake QT_VERSION=qt510 QT_PPA=qt-5.10.1
+- BUILDSYSTEM=cmake QT_VERSION=qt510 QT_PPA=qt-5.10.1
+- BUILDSYSTEM=qbs   QT_VERSION=qt510 QT_PPA=qt-5.10.1 QBS_PROFILE=qt-5-10-1
+- BUILDSYSTEM=qmake QT_VERSION=qt511 QT_PPA=qt-5.11.3
+- BUILDSYSTEM=cmake QT_VERSION=qt511 QT_PPA=qt-5.11.3
+- BUILDSYSTEM=qbs   QT_VERSION=qt511 QT_PPA=qt-5.11.3 QBS_PROFILE=qt-5-11-3
+- BUILDSYSTEM=qmake QT_VERSION=qt512 QT_PPA=qt-5.12.0
+- BUILDSYSTEM=cmake QT_VERSION=qt512 QT_PPA=qt-5.12.0
+- BUILDSYSTEM=qbs   QT_VERSION=qt512 QT_PPA=qt-5.12.0 QBS_PROFILE=qt-5-12-0
 
 before_install:
   - sudo add-apt-repository --yes ppa:beineri/opt-$QT_PPA-xenial
@@ -49,7 +46,7 @@ before_script:
         git clone --depth 1 -b v1.11.1 git://code.qt.io/qbs/qbs.git qbs-build;
         pushd qbs-build;
         qmake -r qbs.pro QMAKE_CXX=$CXX QMAKE_LINK=$CXX "CONFIG+=qbs_no_dev_install qbs_no_man_install";
-        make;
+        MAKEFLAGS=-j4 make;
         export PATH=$PATH:$PWD/bin;
         popd;
         qbs setup-toolchains --detect;
@@ -62,13 +59,13 @@ script:
   - case "$BUILDSYSTEM" in
       qmake)
           qmake;
-          make;
+          MAKEFLAGS=-j4 make;
           make check;
           ;;
       cmake)
           cmake -GNinja -H. -Bbuild;
-          cmake --build build;
-          cmake --build build --target test;
+          cmake --build build --target all;
+          CTEST_OUTPUT_ON_FAILURE=1 cmake --build build --target test;
           ;;
       qbs)
           qbs build -f log4qt.qbs;
