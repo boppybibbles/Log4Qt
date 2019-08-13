@@ -25,9 +25,22 @@ before_install:
 install:
   - sudo apt-get -y install $QT_VERSION-meta-minimal
 
-script:
-  - . /opt/$QT_VERSION/bin/$QT_VERSION-env.sh
-  - qmake
-  - make
-  - make check
-
+jobs:
+   include:
+   -  stage: null
+      name: QMake
+      script:
+         - . /opt/$QT_VERSION/bin/$QT_VERSION-env.sh
+         - qmake
+         - make
+         - make check
+      name: CMake
+      script:
+         - . /opt/$QT_VERSION/bin/$QT_VERSION-env.sh
+         - cmake -H. -Bbuild
+         - cmake --build build --target all
+         - CTEST_OUTPUT_ON_FAILURE=1 cmake --build build --target test
+      name: QBS
+         - . /opt/$QT_VERSION/bin/$QT_VERSION-env.sh
+         - qbs build -f log4qt.qbs
+         - qbs run -p log4qttest
