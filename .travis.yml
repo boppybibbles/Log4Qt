@@ -41,6 +41,7 @@ jobs:
          - cmake --build build --target all
          - CTEST_OUTPUT_ON_FAILURE=1 cmake --build build --target test
       name: QBS
+      script:
          - . /opt/$QT_VERSION/bin/$QT_VERSION-env.sh
          - qbs build -f log4qt.qbs
          - qbs run -p log4qttest
