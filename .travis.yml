@@ -38,15 +38,15 @@ jobs:
       script:
          - . /opt/$QT_VERSION/bin/$QT_VERSION-env.sh
          - qmake
-         - make
+         - MAKEFLAGS=-j4 make
          - make check
-      - name: CMake
+      name: CMake
       script:
          - . /opt/$QT_VERSION/bin/$QT_VERSION-env.sh
-         - cmake -H. -Bbuild
+         - cmake -GNinja -H. -Bbuild
          - cmake --build build --target all
-         - CTEST_OUTPUT_ON_FAILURE=1 cmake --build build --target test
-      - name: QBS
+         - CTEST_OUTPUT_ON_FAILURE=1 CTEST_PARALLEL_LEVEL=4 cmake --build build --target test
+      name: QBS
       script:
          - . /opt/$QT_VERSION/bin/$QT_VERSION-env.sh
          - git clone --depth 1 -b v1.11.1 git://code.qt.io/qbs/qbs.git qbs-build;
