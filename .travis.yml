@@ -11,12 +11,12 @@ os:
 - linux
 
 env:
-- QT_VERSION=qt57 QT_PPA=qt571
-- QT_VERSION=qt58 QT_PPA=qt58
-- QT_VERSION=qt59 QT_PPA=qt594
-- QT_VERSION=qt510 QT_PPA=qt-5.10.1
-- QT_VERSION=qt511 QT_PPA=qt-5.11.3
-- QT_VERSION=qt512 QT_PPA=qt-5.12.2
+- QT_VERSION=qt57 QT_PPA=qt571 QBS_PROFILE=qt-5-7-1
+- QT_VERSION=qt58 QT_PPA=qt58 QBS_PROFILE=qt-5-8-0
+- QT_VERSION=qt59 QT_PPA=qt594 QBS_PROFILE=qt-5-9-4
+- QT_VERSION=qt510 QT_PPA=qt-5.10.1 QBS_PROFILE=qt-5-10-1
+- QT_VERSION=qt511 QT_PPA=qt-5.11.3 QBS_PROFILE=qt-5-11-3
+- QT_VERSION=qt512 QT_PPA=qt-5.12.2 QBS_PROFILE=qt-5-12-0
 
 before_install:
   - sudo add-apt-repository --yes ppa:beineri/opt-$QT_PPA-xenial
@@ -24,6 +24,12 @@ before_install:
 
 install:
   - sudo apt-get -y install $QT_VERSION-meta-minimal
+addons:
+   apt:
+      sources:
+      - ubuntu-toolchain-r-test
+      packages:
+      - g++-9
 
 jobs:
    include:
@@ -34,14 +40,23 @@ jobs:
          - qmake
          - make
          - make check
-      name: CMake
+      - name: CMake
       script:
          - . /opt/$QT_VERSION/bin/$QT_VERSION-env.sh
          - cmake -H. -Bbuild
          - cmake --build build --target all
          - CTEST_OUTPUT_ON_FAILURE=1 cmake --build build --target test
-      name: QBS
+      - name: QBS
       script:
          - . /opt/$QT_VERSION/bin/$QT_VERSION-env.sh
+         - git clone --depth 1 -b v1.11.1 git://code.qt.io/qbs/qbs.git qbs-build;
+         - pushd qbs-build;
+         - qmake -r qbs.pro QMAKE_CXX=$CXX QMAKE_LINK=$CXX "CONFIG+=qbs_no_dev_install qbs_no_man_install";
+         - MAKEFLAGS=-j4 make;
+         - export PATH=$PATH:$PWD/bin;
+         - popd;
+         - qbs setup-toolchains --detect;
+         - qbs setup-qt --detect;
+         - qbs config defaultProfile $QBS_PROFILE;
          - qbs build -f log4qt.qbs
          - qbs run -p log4qttest
