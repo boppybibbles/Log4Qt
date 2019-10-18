@@ -6,6 +6,9 @@ compiler:
 os:
 - linux
 env:
+- MORE=1
+- MORE=2
+env:
 - QT_VERSION=qt57 QT_PPA=qt571 QBS_PROFILE=qt-5-7-1
 - QT_VERSION=qt58 QT_PPA=qt58 QBS_PROFILE=qt-5-8-0
 - QT_VERSION=qt59 QT_PPA=qt594 QBS_PROFILE=qt-5-9-4
