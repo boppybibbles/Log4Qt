@@ -27,7 +27,7 @@ jobs:
       - make check
       name: QMake
    -  script:
-      -  - sudo apt-get -y install ninja-build
+      - sudo apt-get -y install ninja-build
       - . /opt/$QT_VERSION/bin/$QT_VERSION-env.sh
       - cmake -GNinja -H. -Bbuild
       - cmake --build build --target all
