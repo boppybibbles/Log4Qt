@@ -21,14 +21,16 @@ jobs:
       - make -j4
       - make check
       name: QMake
-   -  script:
+      stage: null
+      script:
       - sudo apt-get -y install ninja-build
       - . /opt/$QT_VERSION/bin/$QT_VERSION-env.sh
       - cmake -GNinja -H. -Bbuild
       - cmake --build build --target all
       - CTEST_OUTPUT_ON_FAILURE=1 CTEST_PARALLEL_LEVEL=4 cmake --build build --target test
       name: CMake
-   -  script:
+      stage: null
+      script:
       - . /opt/$QT_VERSION/bin/$QT_VERSION-env.sh
       - git clone --depth 1 -b v1.13.1 git://code.qt.io/qbs/qbs.git qbs-build
       - pushd qbs-build
