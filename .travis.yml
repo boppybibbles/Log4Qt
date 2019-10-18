@@ -5,16 +5,6 @@ compiler:
 - gcc
 os:
 - linux
-env:
-- MORE=1
-- MORE=2
-env:
-- QT_VERSION=qt57 QT_PPA=qt571 QBS_PROFILE=qt-5-7-1
-- QT_VERSION=qt58 QT_PPA=qt58 QBS_PROFILE=qt-5-8-0
-- QT_VERSION=qt59 QT_PPA=qt594 QBS_PROFILE=qt-5-9-4
-- QT_VERSION=qt510 QT_PPA=qt-5.10.1 QBS_PROFILE=qt-5-10-1
-- QT_VERSION=qt511 QT_PPA=qt-5.11.3 QBS_PROFILE=qt-5-11-3
-- QT_VERSION=qt512 QT_PPA=qt-5.12.2 QBS_PROFILE=qt-5-12-0
 before_install:
 - sudo add-apt-repository --yes ppa:beineri/opt-$QT_PPA-xenial
 - sudo apt-get update -qq
@@ -22,7 +12,9 @@ install:
 - sudo apt-get -y install $QT_VERSION-meta-minimal
 jobs:
    include:
-   -  stage: null
+   - &doit
+      stage: null
+      env: QT_VERSION=qt57 QT_PPA=qt571 QBS_PROFILE=qt-5-7-1
       script:
       - . /opt/$QT_VERSION/bin/$QT_VERSION-env.sh
       - qmake
@@ -50,3 +42,13 @@ jobs:
       - qbs build -f log4qt.qbs
       - qbs run -p log4qttest
       name: QBS
+   -  <<: *doit
+      env: QT_VERSION=qt58 QT_PPA=qt58 QBS_PROFILE=qt-5-8-0
+   -  <<: *doit
+      env: QT_VERSION=qt59 QT_PPA=qt594 QBS_PROFILE=qt-5-9-4
+   -  <<: *doit
+      env: QT_VERSION=qt510 QT_PPA=qt-5.10.1 QBS_PROFILE=qt-5-10-1
+   -  <<: *doit
+      env: QT_VERSION=qt511 QT_PPA=qt-5.11.3 QBS_PROFILE=qt-5-11-3
+   -  <<: *doit
+      env: QT_VERSION=qt512 QT_PPA=qt-5.12.2 QBS_PROFILE=qt-5-12-0
